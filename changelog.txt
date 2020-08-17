@@ -1,0 +1,4 @@
+*** WooCommerce Bookings Instructor Helper Changelog ***
+
+2020-08-17 - version 1.0.0
+* Initial release.
