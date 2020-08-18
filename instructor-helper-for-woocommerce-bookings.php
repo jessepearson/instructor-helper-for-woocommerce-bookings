@@ -34,7 +34,7 @@ if ( ! class_exists( 'Instructor_Helper_For_WC_Bookings' ) ) {
 		}
 
 		/**
-		 * Checks dependencies
+		 * Checks dependencies.
 		 * 
 		 * @since   1.0.0
 		 * @version 1.0.0
