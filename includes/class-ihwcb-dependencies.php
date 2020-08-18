@@ -1,12 +1,12 @@
 <?php
 /**
- * WCBIH_Dependencies class handles dependencies for the plugin.
+ * IHWCB_Dependencies class handles dependencies for the plugin.
  *
- * @package WC_Bookings_Instructor_Helper
+ * @package Instructor_Helper_For_WC_Bookings
  * @since   1.0.0
  * @version 1.0.0
  */
-class WCBIH_Dependencies {
+class IHWCB_Dependencies {
 
 	/**
 	 * Plugin's filename.
@@ -70,7 +70,7 @@ class WCBIH_Dependencies {
 	 * @version 1.0.0
 	 */
 	public function deactivation_notice() {
-		$error_message = __( 'WooCommerce Bookings Instructor Helper requires WooCommerce Bookings to be active.', 'wcbih' );
+		$error_message = __( 'Instructor Helper For WooCommerce Bookings requires WooCommerce Bookings to be active.', 'instructor-helper-wc-bookings' );
 		echo wp_kses_post( sprintf( '<div class="error">%s %s</div>', wpautop( $error_message ), wpautop( 'Plugin <strong>deactivated</strong>.' ) ) );
 	}
 }

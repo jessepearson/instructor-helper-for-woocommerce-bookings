@@ -1,8 +1,8 @@
-## WooCommerce Bookings Instructor Helper
+## Instructor Helper For WooCommerce Bookings
 
 ### Description
 
-WooCommerce Bookings Instructor Helper adds additional functionality to the WooCommerce Bookings extension, and requires WooCommerce Bookings to function.
+Instructor Helper For WooCommerce Bookings adds additional functionality to the WooCommerce Bookings extension, and requires WooCommerce Bookings to function.
 
 There are instances, typically with instructors of some sort, where they would like to have two or more products joined by a single resource that have an availability greater than 1, and would like to have it to when one product gets booked, all the rest get their availability blocked off. This does that. 
 
@@ -28,7 +28,7 @@ After installing & activating the plugin:
 
 1. Go to the resource under Bookings > Resources you'd like to apply this to.
 1. Enable the Availability automation.
-1. That's it.
+1. That's it, when a booking is made it will add rules under the other bookable products to make them unavailable for those days or times.
 
 _In order for this to work:_
 

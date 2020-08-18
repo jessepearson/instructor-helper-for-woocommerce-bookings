@@ -1,12 +1,12 @@
 <?php
 /**
- * WCBIH_Resource_Meta_Box class handles adding a meta box to resources to enable automation.
+ * IHWCB_Resource_Meta_Box class handles adding a meta box to resources to enable automation.
  * 
- * @package WC_Bookings_Instructor_Helper
+ * @package Instructor_Helper_For_WC_Bookings
  * @since   1.0.0
  * @version 1.0.0
  */
-class WCBIH_Resource_Meta_Box {
+class IHWCB_Resource_Meta_Box {
 
 	/**
 	 * Constructor.
@@ -28,8 +28,8 @@ class WCBIH_Resource_Meta_Box {
 	public function add_meta_box() {
 
 		add_meta_box(
-			'wcbih_bookable_resource_toggle',
-			__( 'Availability automation', 'wbrih' ),
+			'ihwcb_bookable_resource_toggle',
+			__( 'Instructor Helper', 'instructor-helper-wc-bookings' ),
 			[ $this, 'meta_box_inner' ],
 			[ 'bookable_resource' ],
 			'side'
@@ -47,26 +47,26 @@ class WCBIH_Resource_Meta_Box {
 
 		?>
 		<style>
-			.wcbih_resource_meta_box label {
+			.ihwcb_resource_meta_box label {
 				font-weight: bold;
 				display: inline-block;
 				margin: 0 .75em 0 0;
 			}
 
-			.wcbih_resource_meta_box span {
+			.ihwcb_resource_meta_box span {
 				display: block;
 				margin: .5em 0 0;
 			}
 		</style>
-		<div class="woocommerce wcbih_resource_meta_box">
+		<div class="woocommerce ihwcb_resource_meta_box">
 			<div class="panel-wrap">
 				<div class="options_group">
 					<?php
 						woocommerce_wp_checkbox([
-							'id'          => 'wcbih_resource_enabled',
-							'label'       => __( 'Enable automatic availability', 'wcbih' ),
-							'description' => __( 'This enables automation to create availability rules under products related to this resource.', 'wcbih' ),
-							'value'       => wc_bool_to_string( get_post_meta( $post->ID, '_wcbih_resource_enabled', true ) ),
+							'id'          => 'ihwcb_resource_enabled',
+							'label'       => __( 'Enable automatic availability', 'instructor-helper-wc-bookings' ),
+							'description' => __( 'This enables automation to create availability rules under products related to this resource.', 'instructor-helper-wc-bookings' ),
+							'value'       => wc_bool_to_string( get_post_meta( $post->ID, '_ihwcb_resource_enabled', true ) ),
 						]);
 					?>
 				</div>
@@ -75,7 +75,7 @@ class WCBIH_Resource_Meta_Box {
 			</div>
 		</div>
 		<?php
-		wp_nonce_field( 'wcbih_bookable_resource_toggle_meta_box', 'wcbih_bookable_resource_toggle_meta_box_nonce' );
+		wp_nonce_field( 'ihwcb_bookable_resource_toggle_meta_box', 'ihwcb_bookable_resource_toggle_meta_box_nonce' );
 	}
 
 	/**
@@ -87,7 +87,7 @@ class WCBIH_Resource_Meta_Box {
 	 * @param   obj     $post    The post object the meta box is added to.
 	 */
 	public function meta_box_save( $post_id, $post ) {
-		if ( ! isset( $_POST['wcbih_bookable_resource_toggle_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['wcbih_bookable_resource_toggle_meta_box_nonce'], 'wcbih_bookable_resource_toggle_meta_box' ) ) {
+		if ( ! isset( $_POST['ihwcb_bookable_resource_toggle_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['ihwcb_bookable_resource_toggle_meta_box_nonce'], 'ihwcb_bookable_resource_toggle_meta_box' ) ) {
 			return $post_id;
 		}
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -100,8 +100,8 @@ class WCBIH_Resource_Meta_Box {
 			return $post_id;
 		}
 		
-		update_post_meta( $post_id, '_wcbih_resource_enabled', isset( $_POST['wcbih_resource_enabled'] ) );
+		update_post_meta( $post_id, '_ihwcb_resource_enabled', isset( $_POST['ihwcb_resource_enabled'] ) );
 	}
 }
 
-new WCBIH_Resource_Meta_Box();
+new IHWCB_Resource_Meta_Box();

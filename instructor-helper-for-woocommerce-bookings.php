@@ -1,27 +1,27 @@
 <?php
 /**
- * Plugin Name: WooCommerce Bookings Instructor Helper
- * Plugin URI: 
+ * Plugin Name: Instructor Helper For WooCommerce Bookings
+ * Plugin URI: https://github.com/jessepearson/instructor-helper-for-woocommerce-bookings
  * Description: Allows automation to block availability time off on multiple products shared by a single resource with availability that's higher than 1.
  * Author: Jesse Pearson
  * Author URI: https://jessepearson.net
- * Text Domain: wcbih
- * Version: 1.0.0
+ * Text Domain: instructor-helper-wc-bookings
+ * Version: 1.0.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'WC_Bookings_Instructor_Helper' ) ) {
+if ( ! class_exists( 'Instructor_Helper_For_WC_Bookings' ) ) {
 	/**
 	 * Main class.
 	 *
-	 * @package WC_Bookings_Instructor_Helper
+	 * @package Instructor_Helper_For_WC_Bookings
 	 * @since   1.0.0
 	 * @version 1.0.0
 	 */
-	class WC_Bookings_Instructor_Helper {
+	class Instructor_Helper_For_WC_Bookings {
 
 		/**
 		 * Constructor.
@@ -41,10 +41,10 @@ if ( ! class_exists( 'WC_Bookings_Instructor_Helper' ) ) {
 		 */
 		public function check_dependencies() {
 			// Get dependencies class file.
-			require_once( 'includes/class-wcbih-dependencies.php' );
+			require_once( 'includes/class-ihwcb-dependencies.php' );
 			
 			// Check to see if we need to deactivate the plugin.
-			$dependencies = new WCBIH_Dependencies( __FILE__ );
+			$dependencies = new IHWCB_Dependencies( __FILE__ );
 			$deactivated  = $dependencies->maybe_deactivate_plugin();
 
 			// If we didn't deactivate, include everything else.
@@ -61,16 +61,16 @@ if ( ! class_exists( 'WC_Bookings_Instructor_Helper' ) ) {
 		 */
 		public function includes() {
 			// Files we always need.
-			require_once( 'includes/class-wcbih-logger.php' );
-			require_once( 'includes/class-wcbih-update-availability.php' );
+			require_once( 'includes/class-ihwcb-logger.php' );
+			require_once( 'includes/class-ihwcb-update-availability.php' );
 		
 			// Files only the admin needs.
 			if ( is_admin() ) {
-				require_once( 'includes/class-wcbih-resource-meta-box.php' );
-				require_once( 'includes/class-wcbih-settings.php' );
+				require_once( 'includes/class-ihwcb-resource-meta-box.php' );
+				require_once( 'includes/class-ihwcb-settings.php' );
 			}
 		}
 	}
 
-	new WC_Bookings_Instructor_Helper();
+	new Instructor_Helper_For_WC_Bookings();
 }

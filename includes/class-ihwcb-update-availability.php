@@ -1,12 +1,12 @@
 <?php
 /**
- * WCBIH_Update_Availability class does all the heavy lifting.
+ * IHWCB_Update_Availability class does all the heavy lifting.
  *
- * @package WC_Bookings_Instructor_Helper
+ * @package Instructor_Helper_For_WC_Bookings
  * @since   1.0.0
  * @version 1.0.0
  */
-class WCBIH_Update_Availability {
+class IHWCB_Update_Availability {
 
 	/**
 	 * Booking.
@@ -129,12 +129,12 @@ class WCBIH_Update_Availability {
 	public function maybe_action_product_availability( $action, $booking_id ) {
 
 		// Log what's been started.
-		WCBIH_Logger::log( 'Performing '. $action .' on product availability based on booking: '. $booking_id );
+		IHWCB_Logger::log( 'Performing '. $action .' on product availability based on booking: '. $booking_id );
 
 		// Hand off to initial processor. If there's an error, log it and exit.
 		$processing = $this->start_processing_availability( $booking_id );
 		if ( is_wp_error( $processing ) ) {
-			WCBIH_Logger::log( $processing->get_error_message() );
+			IHWCB_Logger::log( $processing->get_error_message() );
 			return;
 		}
 
@@ -143,19 +143,19 @@ class WCBIH_Update_Availability {
 
 		if ( 'add' === $action ) {
 			// If we are adding, we add the availability rules to the booking itself for possible future processing.
-			update_post_meta( $this->booking->get_id(), '_wcbih_availability_rules', $this->booking_availability );
+			update_post_meta( $this->booking->get_id(), '_ihwcb_availability_rules', $this->booking_availability );
 		}
 
 
 		if ( 'update' === $action ) {
 			// Get the existing availability previously set on the booking and log them.
-			$existing_availability = get_post_meta( $this->booking->get_id(), '_wcbih_availability_rules', true );
-			WCBIH_Logger::log( 'Previous availability rules are: '. print_r( $existing_availability, true ) );
+			$existing_availability = get_post_meta( $this->booking->get_id(), '_ihwcb_availability_rules', true );
+			IHWCB_Logger::log( 'Previous availability rules are: '. print_r( $existing_availability, true ) );
 
 			// Check if the new availability matches the previous availability.
 			if ( $this->is_rule_exact( $this->booking_availability['time'], $existing_availability, 'time' ) ) {
 			 	// If it does, log it and exit, we don't need to update anything. 
-			 	WCBIH_Logger::log( 'Availability unchanged, exiting.' );
+			 	IHWCB_Logger::log( 'Availability unchanged, exiting.' );
 				return;
 			}
 		}
@@ -167,7 +167,7 @@ class WCBIH_Update_Availability {
 
 		// Hand off to processor, then log that we are done.
 		$this->process_product_availability( $action, $existing_availability );
-		WCBIH_Logger::log( 'Finished performing '. $action .' on product availability based on booking: '. $booking_id );
+		IHWCB_Logger::log( 'Finished performing '. $action .' on product availability based on booking: '. $booking_id );
 	}
 
 	/**
@@ -188,7 +188,7 @@ class WCBIH_Update_Availability {
 		// Get the booking object and then the booking product object, log it. 
 		$this->booking         = get_wc_booking( $booking_id );
 		$this->booking_product = get_wc_product_booking( $this->booking->get_product_id() );
-		WCBIH_Logger::log( 'Related product id: '. $this->booking->get_product_id() );
+		IHWCB_Logger::log( 'Related product id: '. $this->booking->get_product_id() );
 
 		// Get the resource remove the product, if there's an error, return it. 
 		$this->resource = $this->get_product_resource( $this->booking_product );
@@ -205,7 +205,7 @@ class WCBIH_Update_Availability {
 		}
 
 		// Log how many products we're working on. 
-		WCBIH_Logger::log( 'Total products found related to resource: '. count( $this->products ) );
+		IHWCB_Logger::log( 'Total products found related to resource: '. count( $this->products ) );
 
 		// Get the booking's availability that it is using. 
 		$this->booking_availability = $this->get_booking_availability_rules( $this->booking );
@@ -237,7 +237,7 @@ class WCBIH_Update_Availability {
 		$resource = $resources[0];
 
 		// Should we be working on this resource?
-		if ( ! get_post_meta( $resource->get_id(), '_wcbih_resource_enabled', true ) ) {
+		if ( ! get_post_meta( $resource->get_id(), '_ihwcb_resource_enabled', true ) ) {
 			return new WP_Error( 'not_enabled', 'Resource '. $resource->get_id() .' does not have automation enabled, exiting.' );
 		}
 
@@ -258,11 +258,11 @@ class WCBIH_Update_Availability {
 		foreach( $this->products as $product ) {
 
 			// Log which product is being worked on. 
-			WCBIH_Logger::log( 'Beginning work on product id: '. $product );
+			IHWCB_Logger::log( 'Beginning work on product id: '. $product );
 
 			// If the product is the one the booking was made on, log it, and skip it. 
 			if ( $this->booking_product->get_id() === $product ) {
-				WCBIH_Logger::log( 'Product is the one related to booking, skipping.' );
+				IHWCB_Logger::log( 'Product is the one related to booking, skipping.' );
 				continue;
 			}
 
@@ -272,8 +272,8 @@ class WCBIH_Update_Availability {
 			$availability = $product->get_availability();
 
 			// Log the product's data. 
-			WCBIH_Logger::log( 'Product\'s duration unit is: '. $unit );
-			WCBIH_Logger::log( 'Product\'s availability is: '. print_r( $availability, true ) );
+			IHWCB_Logger::log( 'Product\'s duration unit is: '. $unit );
+			IHWCB_Logger::log( 'Product\'s availability is: '. print_r( $availability, true ) );
 
 			// For updating and removing, we go through each availability rule from the product. 
 			if ( in_array( $action, [ 'update', 'remove' ] ) ) {
@@ -283,7 +283,7 @@ class WCBIH_Update_Availability {
 					if ( $this->is_rule_exact( $rule, $existing_availability, $unit ) ) {
 					 	// If the rule exists on the product, we remove it from the array (and the product), and log.
 					 	// If the booking is all day or day based, this will remove then readd the same rule. 
-					 	WCBIH_Logger::log( 'Previous availability rule exists on product, removing it.' );
+					 	IHWCB_Logger::log( 'Previous availability rule exists on product, removing it.' );
 						unset( $availability[ $key ] );
 					}
 				}
@@ -296,14 +296,14 @@ class WCBIH_Update_Availability {
 
 					if ( $this->is_rule_exact( $rule, $this->booking_availability, $unit ) ) {
 					 	// If the rule exists on the product, we log it and move on to the next productt.
-					 	WCBIH_Logger::log( 'Exact availability rule exists on product, moving on.' );
+					 	IHWCB_Logger::log( 'Exact availability rule exists on product, moving on.' );
 						continue 2;
 					}
 
 				}
 
 				// We log what availability we are adding, and add it to availability array.
-				WCBIH_Logger::log( 'Adding availability to product:'. print_r( $this->booking_availability[ $unit ], true ) );
+				IHWCB_Logger::log( 'Adding availability to product: '. print_r( $this->booking_availability[ $unit ], true ) );
 				$availability[] = $this->booking_availability[ $unit ];
 			}
 
@@ -313,7 +313,7 @@ class WCBIH_Update_Availability {
 		}
 
 		// Update the availability meta on the booking itself. 
-		update_post_meta( $this->booking->get_id(), '_wcbih_availability_rules', $this->booking_availability );
+		update_post_meta( $this->booking->get_id(), '_ihwcb_availability_rules', $this->booking_availability );
 	}
 
 	/**
@@ -329,9 +329,9 @@ class WCBIH_Update_Availability {
 	public function is_rule_exact( $rule, $availability, $unit ) {
 
 		// Log the rule and availability we're working on. 
-		WCBIH_Logger::log( 'Checking for exact match:' );
-		WCBIH_Logger::log( '> Rule: '. print_r( $rule, true ) );
-		WCBIH_Logger::log( '> Availability: '. print_r( $availability[ $unit ], true ) );
+		IHWCB_Logger::log( 'Checking for exact match:' );
+		IHWCB_Logger::log( '> Rule: '. print_r( $rule, true ) );
+		IHWCB_Logger::log( '> Availability: '. print_r( $availability[ $unit ], true ) );
 
 		// Go through each rule to see if the values match existing availability. 
 		foreach ( $rule as $key => $value ) {
@@ -374,7 +374,7 @@ class WCBIH_Update_Availability {
 		];
 
 		// We log what we've found and return it. 
-		WCBIH_Logger::log( 'Booking availability rules are: '. print_r( $availability, true ) );
+		IHWCB_Logger::log( 'Booking availability rules are: '. print_r( $availability, true ) );
 		return $availability;
 	}
 
@@ -401,4 +401,4 @@ class WCBIH_Update_Availability {
 	}
 }
 
-new WCBIH_Update_Availability();
+new IHWCB_Update_Availability();
